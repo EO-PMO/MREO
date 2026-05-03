@@ -2680,12 +2680,17 @@ const prefix = "risk_matrix_clean_v1_";
 const storage = (() => {
   try {
     const testKey = prefix + "storage_test";
-    storage.setItem(testKey, "1");
-    storage.removeItem(testKey);
-    return localStorage;
+    window.localStorage.setItem(testKey, "1");
+    window.localStorage.removeItem(testKey);
+    return window.localStorage;
   } catch (e) {
     const mem = {};
-    return { getItem: k => mem[k] || null, setItem: (k,v) => { mem[k] = String(v); }, removeItem: k => { delete mem[k]; } };
+    console.warn("Persistência local indisponível. Usando memória temporária.", e);
+    return {
+      getItem: k => Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null,
+      setItem: (k,v) => { mem[k] = String(v); },
+      removeItem: k => { delete mem[k]; }
+    };
   }
 })();
 const meta = {"casper": {"name": "CASPER-149", "short": "CASPER", "title": "Real-World Clinical and Economic Outcomes in Endometrial Cancer (CASPER-149)", "pi": "Dra. Renata Bonadio", "regional": "Rede D’Or / IDOR"}, "estradiol": {"name": "Estradiol + IMC", "short": "E2", "title": "Avaliação dos níveis séricos de estradiol segundo faixas de IMC em pacientes com câncer de mama RH+ na pré-menopausa em uso de inibidores de aromatase", "pi": "São Paulo: Renata Bonadio; Salvador: Maíra Tavares; Recife: Marcos Nogueira; Rio de Janeiro: José Bines", "regional": "Multicêntrico – São Paulo, Salvador, Recife e Rio de Janeiro"}, "adc": {"name": "ADC Hepatobiliar", "short": "ADC", "title": "Antibody–Drug Conjugate Targets in Hepatobiliary Cancers: A Cross-Sectional Evaluation", "pi": "Leonardo da Fonseca; Lidiana Marins; Camila Motta", "regional": "IDOR / Patologia D’Or / Oncologia D’Or"}, "hcc": {"name": "HCC Surveillance", "short": "HCC", "title": "Hepatocellular Carcinoma Surveillance at Risk Patients: A Real-World Study", "pi": "Leonardo da Fonseca; Lidiana Marins; Camila Motta", "regional": "IDOR RJ"}, "prp": {"name": "PRP Osteoartrite", "short": "PRP", "title": "Estudo prospectivo de braço único para avaliar a segurança e a eficácia do tratamento da osteoartrite de joelho com plasma rico em plaquetas (PRP)", "pi": "Verônica F. Vianna; Maria Eugenia L. Duarte; sub-investigador: Guilherme Palhares", "regional": "IDOR – regional não especificada no protocolo"}, "lung50": {"name": "LUNG50", "short": "LUNG50", "title": "Testagem Molecular de Câncer de Pulmão na Rede D’Or (Estudo LUNG50)", "pi": "Marcelo Malandrino de Albuquerque Felizola; Milena Perez Mak; Mariana Petaccia de Macedo; Sofia Vidaurre Mendes; Eldsamira da Silva Mascarenhas Schettini Sobrinho; Carla Rameri Alexandre Silva de Azevedo; Lucianno Henrique Pereira dos Santos", "regional": "Rede D’Or / Oncologia D’Or – multicêntrico, diferentes regionais"}, "metil": {"name": "Metilação EGFR", "short": "METIL", "title": "Análise da metilação do DNA de todo o genoma de pacientes com adenocarcinoma de pulmão metastático e mutação do gene EGFR (ERBB1)", "pi": "Centro coordenador: Clarissa Seródio Baldoto (IDOR RJ); centro participante: Vladmir Cláudio Cordeiro de Lima (A.C.Camargo Cancer Center)", "regional": "IDOR Rio de Janeiro / A.C.Camargo Cancer Center – São Paulo"}};
